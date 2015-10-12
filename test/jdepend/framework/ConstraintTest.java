@@ -2,8 +2,11 @@ package jdepend.framework;
 
 import java.io.IOException;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import static jdepend.framework.DependencyMatchers.matchesPackages;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * @author <b>Mike Clark</b>
@@ -14,16 +17,15 @@ public class ConstraintTest extends JDependTestCase {
 
     private JDepend jDepend;
 
-    public ConstraintTest(String name) {
-        super(name);
-    }
 
-    protected void setUp() {
+    @Before
+    public void setUp() {
         super.setUp();
         PackageFilter filter = PackageFilter.all().excludingProperties().excluding("java.*", "javax.*");
         jDepend = new JDepend(filter);
     }
-
+    
+    @Test
     public void testMatchPass() {
 
         DependencyConstraint constraint = new DependencyConstraint();
@@ -43,7 +45,8 @@ public class ConstraintTest extends JDependTestCase {
 
         assertEquals(true, jDepend.dependencyMatch(constraint));
     }
-
+    
+    @Test
     public void testMatchFail() {
 
         DependencyConstraint constraint = new DependencyConstraint();
@@ -68,33 +71,4 @@ public class ConstraintTest extends JDependTestCase {
         assertEquals(false, jDepend.dependencyMatch(constraint));
     }
 
-    public void testJDependConstraints() throws IOException {
-
-        jDepend.addDirectory(getBuildDir());
-        jDepend.addDirectory(getTestBuildDir());
-
-        jDepend.analyze();
-
-        class Junit {
-            JavaPackage framework, textui;
-        }
-        class Org {
-            JavaPackage junit, junitRunners, hamcrest;
-        }
-        final Junit junit = new Junit();
-        final Org org = new Org();
-
-        class Jdepend implements DependencyDefiner {
-            JavaPackage framework, textui, xmlui, swingui, frameworkP1, frameworkP2, frameworkP3;
-
-            public void dependUpon() {
-                framework.dependsUpon(junit.framework, org.hamcrest, junit.textui);
-                textui.dependsUpon(framework);
-                xmlui.dependsUpon(framework, textui);
-                swingui.dependsUpon(framework);
-                framework.dependsUpon(frameworkP1, frameworkP2, frameworkP3, org.junitRunners, org.junit);
-            }
-        }
-        assertThat(jDepend, matchesPackages(junit, org, new Jdepend()));
-    }
 }

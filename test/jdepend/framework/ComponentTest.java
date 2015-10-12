@@ -1,8 +1,14 @@
 package jdepend.framework;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Collection;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author <b>Mike Clark</b>
@@ -18,21 +24,20 @@ public class ComponentTest extends JDependTestCase {
         formatter = NumberFormat.getInstance();
         formatter.setMaximumFractionDigits(2);
     }
-
-    public ComponentTest(String name) {
-        super(name);
-    }
-
-    protected void setUp() {
+    
+    @Before
+    public void setUp() {
         super.setUp();
         jdepend = new JDepend();
         jdepend.analyzeInnerClasses(false);
     }
-
-    protected void tearDown() {
+    
+    @After
+    public void tearDown() {
         super.tearDown();
     }
-
+    
+    @Test
     public void testJDependComponents() throws IOException {
 
         jdepend.setComponents("jdepend,junit,java,javax");
@@ -43,39 +48,39 @@ public class ComponentTest extends JDependTestCase {
         jdepend.analyze();
 
         Collection packages = jdepend.getPackages();
-        assertEquals(7, packages.size());
+        assertEquals(6, packages.size());
 
         assertJDependPackage();
         assertJUnitPackage();
         assertJavaPackage();
         assertJavaxPackage();
     }
-
+    
     private void assertJDependPackage() {
         JavaPackage p = jdepend.getPackage("jdepend");
         assertEquals("jdepend", p.getName());
-        assertEquals(38, p.getConcreteClassCount());
-        assertEquals(8, p.getAbstractClassCount());
+        assertEquals(40, p.getConcreteClassCount());
+        assertEquals(9, p.getAbstractClassCount());
         assertEquals(0, p.afferentCoupling());
-        assertEquals(6, p.efferentCoupling());
-        assertEquals(format(0.17f), format(p.abstractness()));
+        assertEquals(5, p.efferentCoupling());
+        assertEquals(format(0.18f), format(p.abstractness()));
         assertEquals("1", format(p.instability()));
-        assertEquals(format(0.17f), format(p.distance()));
+        assertEquals(format(0.18f), format(p.distance()));
         assertEquals(1, p.getVolatility());
 
         Collection efferents = p.getEfferents();
-        assertEquals(6, efferents.size());
+        assertEquals(5, efferents.size());
         assertTrue(efferents.contains(new JavaPackage("java")));
         assertTrue(efferents.contains(new JavaPackage("javax")));
-        assertTrue(efferents.contains(new JavaPackage("junit")));
+        assertTrue(efferents.contains(new JavaPackage("org.junit")));
 
         Collection afferents = p.getAfferents();
         assertEquals(0, afferents.size());
     }
 
     private void assertJUnitPackage() {
-        JavaPackage p = jdepend.getPackage("junit");
-        assertEquals("junit", p.getName());
+        JavaPackage p = jdepend.getPackage("org.junit");
+        assertEquals("org.junit", p.getName());
 
         Collection afferents = p.getAfferents();
         assertEquals(1, afferents.size());

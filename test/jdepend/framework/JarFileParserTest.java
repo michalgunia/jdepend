@@ -1,8 +1,14 @@
 package jdepend.framework;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author <b>Mike Clark</b>
@@ -14,21 +20,21 @@ public class JarFileParserTest extends JDependTestCase {
     private File jarFile;
     private File zipFile;
 
-    public JarFileParserTest(String name) {
-        super(name);
-    }
-
-    protected void setUp() {
+    
+    @Before
+    public void setUp() {
         super.setUp();
 
         jarFile = new File(getTestDataDir() + "test.jar");
         zipFile = new File(getTestDataDir() + "test.zip");
     }
-
-    protected void tearDown() {
+    
+    @After
+    public void tearDown() {
         super.tearDown();
     }
-
+    
+    @Test
     public void testInvalidJarFile() throws IOException {
 
         JavaClassBuilder builder = new JavaClassBuilder();
@@ -43,7 +49,8 @@ public class JarFileParserTest extends JDependTestCase {
             assertTrue(true);
         }
     }
-
+    
+    @Test
     public void testInvalidZipFile() throws IOException {
 
         JavaClassBuilder builder = new JavaClassBuilder();
@@ -58,7 +65,8 @@ public class JarFileParserTest extends JDependTestCase {
             assertTrue(true);
         }
     }
-
+    
+    @Test
     public void testJarFile() throws IOException {
 
         JavaClassBuilder builder = new JavaClassBuilder();
@@ -69,7 +77,8 @@ public class JarFileParserTest extends JDependTestCase {
         assertClassesExist(classes);
         assertInnerClassesExist(classes);
     }
-
+    
+    @Test
     public void testJarFileWithoutInnerClasses() throws IOException {
 
         FileManager fm = new FileManager();
@@ -82,7 +91,8 @@ public class JarFileParserTest extends JDependTestCase {
 
         assertClassesExist(classes);
     }
-
+    
+    @Test
     public void testZipFile() throws IOException {
 
         JavaClassBuilder builder = new JavaClassBuilder();
@@ -93,7 +103,8 @@ public class JarFileParserTest extends JDependTestCase {
         assertClassesExist(classes);
         assertInnerClassesExist(classes);
     }
-
+    
+    @Test
     public void testZipFileWithoutInnerClasses() throws IOException {
 
         FileManager fm = new FileManager();
@@ -106,7 +117,8 @@ public class JarFileParserTest extends JDependTestCase {
 
         assertClassesExist(classes);
     }
-
+    
+    @Test
     public void testCountClasses() throws IOException {
 
         JDepend jdepend = new JDepend();

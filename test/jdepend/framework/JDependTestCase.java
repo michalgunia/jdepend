@@ -1,5 +1,7 @@
 package jdepend.framework;
 
+import static org.junit.Assert.*;
+
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -9,7 +11,7 @@ import java.io.File;
  * @author Clarkware Consulting, Inc.
  */
 
-public class JDependTestCase extends TestCase {
+public abstract class JDependTestCase {
 
     private String homeDir;
     private String testDir;
@@ -20,9 +22,6 @@ public class JDependTestCase extends TestCase {
     private String originalUserHome;
 
 
-    public JDependTestCase(String name) {
-        super(name);
-    }
 
     protected void setUp() {
         System.setProperty("jdepend.home", ".");
@@ -41,9 +40,6 @@ public class JDependTestCase extends TestCase {
         packageSubDir = "jdepend" + File.separator +
                 "framework" + File.separator;
         originalUserHome = System.getProperty("user.home");
-    }
-
-    public void testDummy() {
     }
 
     protected void tearDown() {

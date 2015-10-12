@@ -2,6 +2,8 @@ package jdepend.framework;
 
 import java.util.*;
 
+import jdepend.framework.exceptions.ForbidenEfferentException;
+
 /**
  * The <code>JavaPackage</code> class represents a Java package.
  *
@@ -266,4 +268,28 @@ public class JavaPackage {
     public String toString() {
         return name;
     }
+    
+    
+    boolean isAnyForbidenEfferentPresent(List<JavaPackage> efferentsForCheck) throws ForbidenEfferentException {
+		for (JavaPackage notSupportedJavaPackage : efferentsForCheck) {
+			if(isEfferentPresent(notSupportedJavaPackage)){
+				throw new ForbidenEfferentException(notSupportedJavaPackage.getName(), this.getName());
+			}
+		}
+		return false;
+	}
+
+	public boolean isEfferentPresent(JavaPackage notSupportedJavaPackage) throws ForbidenEfferentException {
+		if(efferents.contains(notSupportedJavaPackage)){
+			return true;
+		}
+		if(notSupportedJavaPackage.getName().endsWith("*")){
+			for (JavaPackage efferent : efferents) {
+				if(efferent.getName().contains(notSupportedJavaPackage.getName().substring(0, notSupportedJavaPackage.getName().length() - 1))){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

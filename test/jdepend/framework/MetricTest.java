@@ -1,7 +1,13 @@
 package jdepend.framework;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.text.NumberFormat;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author <b>Mike Clark</b>
@@ -18,11 +24,8 @@ public class MetricTest extends JDependTestCase {
         formatter.setMaximumFractionDigits(2);
     }
 
-    public MetricTest(String name) {
-        super(name);
-    }
-
-    protected void setUp() {
+    @Before
+    public void setUp() {
         super.setUp();
 
         PackageFilter filter = PackageFilter.all().excludingProperties().excluding("java.*", "javax.*");
@@ -30,11 +33,13 @@ public class MetricTest extends JDependTestCase {
         jdepend = new JDepend(filter);
         jdepend.analyzeInnerClasses(false);
     }
-
-    protected void tearDown() {
+    
+    @After
+    public void tearDown() {
         super.tearDown();
     }
-
+    
+    @Test
     public void testAnalyzeClassFiles() throws IOException {
         jdepend.addDirectory(getBuildDir());
         jdepend.addDirectory(getTestBuildDir());
@@ -42,7 +47,7 @@ public class MetricTest extends JDependTestCase {
     }
 
     private void assertAnalyzePackages() {
-        assertEquals(54, jdepend.countClasses());
+        assertEquals(57, jdepend.countClasses());
 
         PackageFilter filter = jdepend.getFilter().excluding("junit.*");
 
@@ -58,13 +63,13 @@ public class MetricTest extends JDependTestCase {
         JavaPackage p = jdepend.getPackage("jdepend.framework");
         assertNotNull(p);
 
-        assertEquals(27, p.getConcreteClassCount());
-        assertEquals(6, p.getAbstractClassCount());
+        assertEquals(28, p.getConcreteClassCount());
+        assertEquals(7, p.getAbstractClassCount());
         assertEquals(3, p.afferentCoupling());
-        assertEquals(6, p.efferentCoupling());
-        assertEquals(format(0.18f), format(p.abstractness()));
-        assertEquals(format(0.67f), format(p.instability()));
-        assertEquals(format(0.15f), format(p.distance()));
+        assertEquals(7, p.efferentCoupling());
+        assertEquals(format(0.2f), format(p.abstractness()));
+        assertEquals(format(0.7f), format(p.instability()));
+        assertEquals(format(0.1f), format(p.distance()));
         assertEquals(1, p.getVolatility());
     }
 
@@ -111,7 +116,8 @@ public class MetricTest extends JDependTestCase {
         assertEquals(format(0.0f), format(p.distance()));
         assertEquals(1, p.getVolatility());
     }
-
+    
+    @Test
     public void testConfiguredVolatility() throws IOException {
 
         jdepend.addDirectory(getBuildDir());

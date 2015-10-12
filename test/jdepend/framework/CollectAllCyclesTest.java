@@ -1,7 +1,11 @@
 package jdepend.framework;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
 
 /**
  * @author <b>Mike Clark</b>
@@ -10,10 +14,7 @@ import java.util.List;
 
 public class CollectAllCyclesTest extends JDependTestCase {
 
-    public CollectAllCyclesTest(String name) {
-        super(name);
-    }
-
+	@Test
     public void testNoCycles() {
 
         JavaPackage a = new JavaPackage("A");
@@ -31,7 +32,8 @@ public class CollectAllCyclesTest extends JDependTestCase {
         assertEquals(false, b.collectAllCycles(bCycles));
         assertListEquals(bCycles, new String[]{});
     }
-
+    
+    @Test
     public void test2Node1BranchCycle() {
 
         JavaPackage a = new JavaPackage("A");
@@ -50,7 +52,8 @@ public class CollectAllCyclesTest extends JDependTestCase {
         assertEquals(true, b.collectAllCycles(bCycles));
         assertListEquals(bCycles, new String[]{"B", "A", "B" });
     }
-
+    
+    @Test
     public void test3Node1BranchCycle() {
 
         JavaPackage a = new JavaPackage("A");
@@ -77,7 +80,8 @@ public class CollectAllCyclesTest extends JDependTestCase {
         assertEquals(true, c.collectAllCycles(cCycles));
         assertListEquals(cCycles, new String[]{"C", "A", "B", "C" });
     }
-
+    
+    @Test
     public void test3Node1BranchSubCycle() {
 
         JavaPackage a = new JavaPackage("A");
@@ -103,7 +107,8 @@ public class CollectAllCyclesTest extends JDependTestCase {
         assertEquals(true, c.collectAllCycles(cCycles));
         assertListEquals(cCycles, new String[]{"C", "B", "C" });
     }
-
+    
+    @Test
     public void test3Node2BranchCycle() {
 
         JavaPackage a = new JavaPackage("A");
@@ -131,7 +136,8 @@ public class CollectAllCyclesTest extends JDependTestCase {
         assertEquals(true, c.collectAllCycles(cCycles));
         assertListEquals(cCycles, new String[]{"C", "A", "B", "A", "C" });
     }
-
+    
+    @Test
     public void test5Node2BranchCycle() {
 
         JavaPackage a = new JavaPackage("A");
